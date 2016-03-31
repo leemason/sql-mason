@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/leemason/query-mason.git"
+    "url": "git+https://github.com/leemason/sql-mason.git"
   },
   "author": "Lee Mason <contact@nohalfpixels.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/leemason/query-mason/issues"
+    "url": "https://github.com/leemason/sql-mason/issues"
   },
-  "homepage": "https://github.com/leemason/query-mason#readme",
+  "homepage": "https://github.com/leemason/sql-mason#readme",
   "dependencies": {
     "bluebird": "^3.3.4",
     "lodash": "^4.6.1",
