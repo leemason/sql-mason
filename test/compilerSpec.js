@@ -1,7 +1,7 @@
 var expect = require("chai").expect,
-    Mason = require("../lib/builder");
+    Mason = require("../lib/compiler");
 
-describe("Builder", function() {
+describe("Compiler", function() {
 
     beforeEach(function () {
         var mason = new Mason();
@@ -17,9 +17,7 @@ describe("Builder", function() {
                 .select('*')
                 .from('users');
 
-            expect(sql._builder.method).to.equal('Select');
-
-            expect(sql.getSelects()).to.eql(['*']);
+            expect(sql.toSql()).to.equal('select * from `users`;');
 
         });
 
@@ -31,7 +29,7 @@ describe("Builder", function() {
                 .select('first_name', 'last_name', 'email')
                 .from('users');
 
-            expect(sql.getSelects()).to.eql(['first_name', 'last_name', 'email']);
+            expect(sql.toSql()).to.equal('select `first_name`, `last_name`, `email` from `users`;');
 
         });
 
@@ -48,7 +46,7 @@ describe("Builder", function() {
                 .distinct()
                 .from('users');
 
-            expect(sql.isDistinct()).to.equal(true);
+            expect(sql.toSql()).to.equal('select distinct * from `users`;');
 
         });
 
@@ -65,7 +63,7 @@ describe("Builder", function() {
                 .from('users')
                 .whereRaw('`first_name` = ?', ['lee']);
 
-            expect(sql.getBindings()).to.eql(['lee']);
+            expect(sql.toSql()).to.equal('select * from `users` where `first_name` = ?;');
 
         });
 
@@ -82,7 +80,7 @@ describe("Builder", function() {
                 .from('users')
                 .where('first_name', 'lee');
 
-            expect(sql.getBindings()).to.eql(['lee']);
+            expect(sql.toSql()).to.equal('select * from `users` where `first_name` = ?;');
 
         });
 
@@ -95,7 +93,7 @@ describe("Builder", function() {
                 .from('users')
                 .where('first_name', '>=', 'lee');
 
-            expect(sql.getBindings()).to.eql(['lee']);
+            expect(sql.toSql()).to.equal('select * from `users` where `first_name` >= ?;');
 
         });
 
@@ -112,7 +110,7 @@ describe("Builder", function() {
                         .where('last_name', 'mason');
                 });
 
-            expect(sql.getBindings()).to.eql(['lee', 'mason']);
+            expect(sql.toSql()).to.equal('select * from `users` where (`first_name` = ? and `last_name` = ?);');
 
         });
 
@@ -129,7 +127,7 @@ describe("Builder", function() {
                 .from('users')
                 .whereBetween('first_name', ['lee', 'david']);
 
-            expect(sql.getBindings()).to.eql(['lee', 'david']);
+            expect(sql.toSql()).to.equal('select * from `users` where `first_name` between ? and ?;');
 
         });
 
@@ -146,7 +144,7 @@ describe("Builder", function() {
                 .from('users')
                 .whereNotBetween('first_name', ['lee', 'david']);
 
-            expect(sql.getBindings()).to.eql(['lee', 'david']);
+            expect(sql.toSql()).to.equal('select * from `users` where `first_name` not between ? and ?;');
 
         });
 
@@ -163,7 +161,7 @@ describe("Builder", function() {
                 .from('users')
                 .whereIn('first_name', ['lee', 'david']);
 
-            expect(sql.getBindings()).to.eql(['lee', 'david']);
+            expect(sql.toSql()).to.equal('select * from `users` where `first_name` in ( ?, ? );');
 
         });
 
@@ -180,7 +178,7 @@ describe("Builder", function() {
                 .from('users')
                 .whereNotIn('first_name', ['lee', 'david']);
 
-            expect(sql.getBindings()).to.eql(['lee', 'david']);
+            expect(sql.toSql()).to.equal('select * from `users` where `first_name` not in ( ?, ? );');
 
         });
 
@@ -197,7 +195,7 @@ describe("Builder", function() {
                 .from('users')
                 .whereNull('first_name');
 
-            expect(sql.getBindings()).to.eql([]);
+            expect(sql.toSql()).to.equal('select * from `users` where `first_name` is null;');
 
         });
 
@@ -214,7 +212,7 @@ describe("Builder", function() {
                 .from('users')
                 .whereNotNull('first_name');
 
-            expect(sql.getBindings()).to.eql([]);
+            expect(sql.toSql()).to.equal('select * from `users` where `first_name` is not null;');
 
         });
 
@@ -236,7 +234,7 @@ describe("Builder", function() {
                         .whereRaw('users.id = admins.user_id');
                 });
 
-            expect(sql.getBindings()).to.eql([]);
+            expect(sql.toSql()).to.equal('select * from `users` where exists ( select * from `admins` where users.id = admins.user_id );');
 
         });
 
@@ -258,12 +256,12 @@ describe("Builder", function() {
                         .whereRaw('users.id = admins.user_id');
                 });
 
-            expect(sql.getBindings()).to.eql([]);
+            expect(sql.toSql()).to.equal('select * from `users` where not exists ( select * from `admins` where users.id = admins.user_id );');
 
         });
 
     });
-
+    
     describe("#orWhere**", function () {
 
         it("should compile a simple select query with where conditions joined by 'or'", function () {
@@ -276,7 +274,7 @@ describe("Builder", function() {
                 .where('first_name', 'lee')
                 .orWhere('first_name', 'david');
 
-            expect(sql.getBindings()).to.eql(['lee', 'david']);
+            expect(sql.toSql()).to.equal('select * from `users` where `first_name` = ? or `first_name` = ?;');
 
         });
 
