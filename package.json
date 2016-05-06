@@ -1,6 +1,6 @@
 {
-  "name": "query-mason",
-  "version": "1.0.0",
+  "name": "sql-mason",
+  "version": "0.1.0",
   "description": "A Node JS SQL Query Builder",
   "main": "index.js",
   "scripts": {
@@ -17,9 +17,7 @@
   },
   "homepage": "https://github.com/leemason/sql-mason#readme",
   "dependencies": {
-    "bluebird": "^3.3.4",
-    "lodash": "^4.6.1",
-    "mysql": "^2.10.2"
+    "lodash": "^4.6.1"
   },
   "devDependencies": {
     "chai": "^3.5.0",
