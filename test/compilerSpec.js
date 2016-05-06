@@ -739,6 +739,42 @@ describe("Compiler", function() {
 
         });
 
+        it("should compile a simple select query with a join clause provided as a callback", function () {
+
+            var mason = new Mason();
+
+            sql = mason
+                .select('*')
+                .from('users')
+                .where('first_name', 'lee')
+                .join(function(builder){
+                    builder.table("accounts")
+                        .on("accounts.id", "=", "users.account_id");
+                });
+
+            expect(sql.toSql()).to.equal('select * from `users` inner join `accounts` on `accounts`.`id` = `users`.`account_id` where `first_name` = ?;');
+
+        });
+
+        it("should compile a simple select query with a join clause provided as a callback with orOn andOn clauses", function () {
+
+            var mason = new Mason();
+
+            sql = mason
+                .select('*')
+                .from('users')
+                .where('first_name', 'lee')
+                .join(function(builder){
+                    builder.table("accounts")
+                        .on("accounts.id", "=", "users.account_id")
+                        .andOn("accounts.id", "=", "users.account_id")
+                        .orOn("accounts.id", "=", "users.account_id");
+                });
+
+            expect(sql.toSql()).to.equal('select * from `users` inner join `accounts` on `accounts`.`id` = `users`.`account_id` and `accounts`.`id` = `users`.`account_id` or `accounts`.`id` = `users`.`account_id` where `first_name` = ?;');
+
+        });
+
     });
 
     describe("#outerJoin", function () {
