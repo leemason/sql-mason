@@ -521,4 +521,173 @@ describe("Builder", function() {
 
     });
 
+    describe("#joinRaw", function () {
+
+        it("should compile a simple select query with a join raw clause", function () {
+
+            var mason = new Mason();
+
+            sql = mason
+                .select('*')
+                .from('users')
+                .where('first_name', 'lee')
+                .joinRaw('"accounts" on "accounts"."id" = "users"."account_id"');
+
+            expect(sql.getJoins()[0].value).to.equal('"accounts" on "accounts"."id" = "users"."account_id"');
+
+        });
+
+    });
+
+    describe("#join", function () {
+
+        it("should compile a simple select query with a join clause", function () {
+
+            var mason = new Mason();
+
+            sql = mason
+                .select('*')
+                .from('users')
+                .where('first_name', 'lee')
+                .join("accounts", "accounts.id", "users.account_id");
+
+            expect(sql.getJoins()[0].table).to.equal("accounts");
+            expect(sql.getJoins()[0].key).to.equal("accounts.id");
+            expect(sql.getJoins()[0].value).to.equal("users.account_id");
+            expect(sql.getJoins()[0].connector).to.equal("inner join");
+
+        });
+
+    });
+
+    describe("#outerJoin", function () {
+
+        it("should compile a simple select query with a outer join clause", function () {
+
+            var mason = new Mason();
+
+            sql = mason
+                .select('*')
+                .from('users')
+                .where('first_name', 'lee')
+                .outerJoin("accounts", "accounts.id", "users.account_id");
+
+            expect(sql.getJoins()[0].table).to.equal("accounts");
+            expect(sql.getJoins()[0].key).to.equal("accounts.id");
+            expect(sql.getJoins()[0].value).to.equal("users.account_id");
+            expect(sql.getJoins()[0].connector).to.equal("outer join");
+
+        });
+
+    });
+
+    describe("#fullOuterJoin", function () {
+
+        it("should compile a simple select query with a full outer join clause", function () {
+
+            var mason = new Mason();
+
+            sql = mason
+                .select('*')
+                .from('users')
+                .where('first_name', 'lee')
+                .fullOuterJoin("accounts", "accounts.id", "users.account_id");
+
+            expect(sql.getJoins()[0].connector).to.equal("full outer join");
+
+        });
+
+    });
+
+    describe("#crossJoin", function () {
+
+        it("should compile a simple select query with a cross join clause", function () {
+
+            var mason = new Mason();
+
+            sql = mason
+                .select('*')
+                .from('users')
+                .where('first_name', 'lee')
+                .crossJoin("accounts", "accounts.id", "users.account_id");
+
+            expect(sql.getJoins()[0].connector).to.equal("cross join");
+
+        });
+
+    });
+
+    describe("#leftJoin", function () {
+
+        it("should compile a simple select query with a left join clause", function () {
+
+            var mason = new Mason();
+
+            sql = mason
+                .select('*')
+                .from('users')
+                .where('first_name', 'lee')
+                .leftJoin("accounts", "accounts.id", "users.account_id");
+
+            expect(sql.getJoins()[0].connector).to.equal("left join");
+
+        });
+
+    });
+
+    describe("#leftOuterJoin", function () {
+
+        it("should compile a simple select query with a left outer join clause", function () {
+
+            var mason = new Mason();
+
+            sql = mason
+                .select('*')
+                .from('users')
+                .where('first_name', 'lee')
+                .leftOuterJoin("accounts", "accounts.id", "users.account_id");
+
+            expect(sql.getJoins()[0].connector).to.equal("left outer join");
+
+        });
+
+    });
+
+
+    describe("#rightJoin", function () {
+
+        it("should compile a simple select query with a right join clause", function () {
+
+            var mason = new Mason();
+
+            sql = mason
+                .select('*')
+                .from('users')
+                .where('first_name', 'lee')
+                .rightJoin("accounts", "accounts.id", "users.account_id");
+
+            expect(sql.getJoins()[0].connector).to.equal("right join");
+
+        });
+
+    });
+
+    describe("#rightOuterJoin", function () {
+
+        it("should compile a simple select query with a right outer join clause", function () {
+
+            var mason = new Mason();
+
+            sql = mason
+                .select('*')
+                .from('users')
+                .where('first_name', 'lee')
+                .rightOuterJoin("accounts", "accounts.id", "users.account_id");
+
+            expect(sql.getJoins()[0].connector).to.equal("right outer join");
+
+        });
+
+    });
+
 });
